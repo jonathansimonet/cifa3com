@@ -2,11 +2,12 @@
 session_start();
 include_once('dbh.php');
 
-if($_SESSION['login'] != 'on' || $_GET['action'] == 'logout'){
-    session_destroy();
-    header("Location: index.php");
+if (isset($_SESSION['login']) && isset($_GET['action']) ) {
+    if ($_SESSION['login'] != 'on' || $_GET['action'] == 'logout') {
+        session_destroy();
+        header("Location: index.php");
+    }
 }
-
 /** Students list */
 $stdlst = $dbh->prepare("SELECT name, firstname, website FROM students ORDER BY name");
 $stdlst->execute();
@@ -16,8 +17,11 @@ $modlst = $dbh->prepare("SELECT module_name FROM modules");
 $modlst->execute();
 
 /** Insert datas */
-$inser = $dbh->prepare("INSERT INTO db_cifa3com (title, video_link, synopsis, modules, student_infos) VALUES (?, ?, ?, ?, ?)");
-$inser->execute(array($_POST['title'], $_POST['video_link'], $_POST['synopsis'], $_POST['modules'], $_POST['student_infos']));
+if (isset($_POST['title'], $_POST['video_link']) && !empty($_POST['title']) && !empty($_POST['video']))
+{
+    $inser = $dbh->prepare("INSERT INTO db_cifa3com (title, video_link, synopsis, modules, student_infos) VALUES (?, ?, ?, ?, ?)");
+    $inser->execute(array($_POST['title'], $_POST['video_link'], $_POST['synopsis'], $_POST['modules'], $_POST['student_infos']));
+}
 ?>
 
 <!DOCTYPE html>

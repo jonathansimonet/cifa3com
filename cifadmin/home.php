@@ -2,9 +2,11 @@
 session_start();
 include_once('dbh.php');
 
-if($_SESSION['login'] != 'on' || $_GET['action'] == 'logout'){
-    session_destroy();
-    header("Location: index.php");
+if (isset($_SESSION['login']) && isset($_GET['action']) ){
+    if($_SESSION['login'] != 'on' || $_GET['action'] == 'logout') {
+        session_destroy();
+        header("Location: index.php");
+    }
 }
 
 /** Items list */
